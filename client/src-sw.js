@@ -38,11 +38,11 @@ registerRoute(
     cacheName: 'static-resources',
   })
 );
-//Above, we Cache CSS and JavaScript files using StaleWhileRevalidate strategy
+//Above, we  run time Cache CSS and JavaScript files using StaleWhileRevalidate strategy
 // Also, this allows us to serve the cached version while simultaneously updating the cache with a fresh version from the network.
   
-const imagecache = new CacheFirst({
-    cacheName: 'image-cache',
+const assetCache = new CacheFirst({
+    cacheName: 'asset-cache',
     plugins: [
       new CacheableResponsePlugin({
         statuses: [0, 200],
@@ -55,8 +55,19 @@ const imagecache = new CacheFirst({
 });
 
 
-registerRoute(({ request }) => request.destination === 'image', imagecache);
+warmStrategyCache({
+  urls: ['/main.css', '/main.bundle.js','/install.bundle.js',],
+  strategy: assetCache,
+});
+
+// Above we use the warm startegy to pre caache all our asset files located in our dist folder.
+// Note: file name in dist folder must match what you want cached.
 
 
-// Above, we Cache image files using CacheFirst strategy with expiration
-// Also, we register this request with using request.destionation to match resource being requested. 
+
+registerRoute(({ request }) => request.destination === 'image', assetCache);
+
+
+// Above, we  run time cache images assests using the assetCache entry we created. Any images cached will appear in here when requested.
+// Also, we register a request with using request.destionation to match images being requested.
+// This allows us to runtime cash images dependnig on what sze image is needed. 
