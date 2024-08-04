@@ -56,7 +56,11 @@ module.exports = () => {
             sizes: [96, 128, 192, 256, 384, 512],
             destination: path.join('assets', 'icons'),
           },
+
+        
+
         ],
+
       }),
 
       // Above, is our manifest plugin that we will be adding to our build.
@@ -99,6 +103,9 @@ module.exports = () => {
         {
           test: /\.(png|svg|jpg|jpeg|gif)$/i,
           type: 'asset/resource',
+          generator: {
+            filename: 'assets/images/[name][ext]', // Ensure this is correct
+          },
         },
 
         // Above is a rule for images
